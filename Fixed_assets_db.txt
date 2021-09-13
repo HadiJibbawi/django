@@ -1,0 +1,50 @@
+DROP TABLE IF EXISTS fixed_assets;
+DROP TABLE IF EXISTS fixed_assets_category;
+DROP TABLE IF EXISTS fixed_assets_subcategory;
+DROP TABLE IF EXISTS fixed_assets_operation_types;
+DROP TABLE IF EXISTS fixed_assets_group;
+DROP TABLE IF EXISTS fixed_assets_transactions;
+
+CREATE TABLE fixed_assets (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+title VARCHAR(100) NOT NULL,
+location TEXT NOT NULL,
+description VARCHAR(300) NOT NULL,
+cost FLOAT NOT NULL,
+acquisition_date DATE NOT NULL,
+subcategory_id INT NOT NULL,
+group_id INT NOT NULL,
+active INT(1) NOT NULL);
+
+CREATE TABLE fixed_assets_category (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+title VARCHAR(100) NOT NULL);
+
+CREATE TABLE fixed_assets_subcategory (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+category_id INT NOT NULL,
+title VARCHAR(100) NOT NULL);
+
+CREATE TABLE fixed_assets_operation_types (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+description VARCHAR(100) NOT NULL);
+
+CREATE TABLE fixed_assets_group (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+title VARCHAR(100) NOT NULL,
+description TEXT NOT NULL);
+
+CREATE TABLE fixed_assets_transactions (
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+asset_id INT NOT NULL,
+operation_id INT NOT NULL,
+current_cost FLOAT NOT NULL,
+depreciation_amount FLOAT NOT NULL,
+operation_date DATE NOT NULL,
+location VARCHAR(300) NOT NULL);
+
+ALTER TABLE fixed_assets ADD CONSTRAINT fixed_assets_subcategory_id_fixed_assets_subcategory_id FOREIGN KEY (subcategory_id) REFERENCES fixed_assets_subcategory(id);
+ALTER TABLE fixed_assets ADD CONSTRAINT fixed_assets_group_id_fixed_assets_group_id FOREIGN KEY (group_id) REFERENCES fixed_assets_group(id);
+ALTER TABLE fixed_assets_subcategory ADD CONSTRAINT fixed_assets_subcategory_category_id_fixed_assets_category_id FOREIGN KEY (category_id) REFERENCES fixed_assets_category(id);
+ALTER TABLE fixed_assets_transactions ADD CONSTRAINT fixed_assets_transactions_asset_id_fixed_assets_id FOREIGN KEY (asset_id) REFERENCES fixed_assets(id);
+ALTER TABLE fixed_assets_transactions ADD CONSTRAINT fixed_assets_transactions_operation_id_fixed_assets_operation_types_id FOREIGN KEY (operation_id) REFERENCES fixed_assets_operation_types(id);
